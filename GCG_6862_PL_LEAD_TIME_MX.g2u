@@ -1,0 +1,406 @@
+﻿Program.Sub.ScreenSU.Start
+Gui.F_Main..Create(BaseForm)
+Gui.F_Main..Caption("Product Line Lead Times")
+Gui.F_Main..Size(1024,720)
+Gui.F_Main..MinX(0)
+Gui.F_Main..MinY(0)
+Gui.F_Main..Position(0,0)
+Gui.F_Main..AlwaysOnTop(False)
+Gui.F_Main..FontName("Tahoma")
+Gui.F_Main..FontSize(8.25)
+Gui.F_Main..ControlBox(True)
+Gui.F_Main..MaxButton(True)
+Gui.F_Main..MinButton(True)
+Gui.F_Main..MousePointer(0)
+Gui.F_Main..Moveable(True)
+Gui.F_Main..Sizeable(True)
+Gui.F_Main..ShowInTaskBar(True)
+Gui.F_Main..TitleBar(True)
+Gui.F_Main..Event(UnLoad,F_Main_UnLoad)
+Gui.F_Main.frameMain.Create(Frame)
+Gui.F_Main.frameMain.Enabled(True)
+Gui.F_Main.frameMain.Visible(True)
+Gui.F_Main.frameMain.Zorder(0)
+Gui.F_Main.frameMain.Size(1024,547)
+Gui.F_Main.frameMain.Position(0,78)
+Gui.F_Main.frameMain.Caption("")
+Gui.F_Main.frameMain.FontName("Tahoma")
+Gui.F_Main.frameMain.FontSize(8.25)
+Gui.F_Main.GsGcPL_LeadTimes.Create(GsGridControl)
+Gui.F_Main.GsGcPL_LeadTimes.Enabled(True)
+Gui.F_Main.GsGcPL_LeadTimes.Visible(True)
+Gui.F_Main.GsGcPL_LeadTimes.Zorder(0)
+Gui.F_Main.GsGcPL_LeadTimes.Size(1024,533)
+Gui.F_Main.GsGcPL_LeadTimes.Position(0,0)
+Gui.F_Main.GsGcPL_LeadTimes.Dock(5)
+Gui.F_Main.GsGcPL_LeadTimes.Event(CellValueChanged,GsGcPL_LeadTimes_CellValueChanged)
+Gui.F_Main.GsGcPL_LeadTimes.Parent("frameMain")
+Gui.F_Main.txtEmailAdd.Create(TextBox,"",True,227,20,0,5,657,True,0,"Tahoma",8.25,,1)
+Gui.F_Main.txtEmailAdd.Anchor(6)
+Gui.F_Main.lblEmailAdd.Create(Label,"Email to:",True,73,19,0,5,632,True,0,"Tahoma",12,,0,0)
+Gui.F_Main.lblEmailAdd.BorderStyle(0)
+Gui.F_Main.lblEmailAdd.FontStyle(True,False,False,False,False)
+Gui.F_Main.cmdEmailSet.Create(Button)
+Gui.F_Main.cmdEmailSet.Enabled(True)
+Gui.F_Main.cmdEmailSet.Visible(True)
+Gui.F_Main.cmdEmailSet.Zorder(0)
+Gui.F_Main.cmdEmailSet.Size(75,23)
+Gui.F_Main.cmdEmailSet.Position(236,656)
+Gui.F_Main.cmdEmailSet.Caption("Set")
+Gui.F_Main.cmdEmailSet.FontName("Tahoma")
+Gui.F_Main.cmdEmailSet.FontSize(12)
+Gui.F_Main.cmdEmailSet.FontStyle(True,False,False,False,False)
+Gui.F_Main.cmdEmailSet.Event(Click,cmdEmailSet_Click)
+Gui.F_Main.lblStrtDate.Create(Label,"Start Date",True,85,19,0,4,29,True,0,"Tahoma",12,,0,0)
+Gui.F_Main.lblStrtDate.BorderStyle(0)
+Gui.F_Main.lblStrtDate.FontStyle(True,False,False,False,False)
+Gui.F_Main.lblCalculate.Create(Label,"Calculate Average Lead Time in Days within These Dates",True,540,23,0,4,4,True,0,"Tahoma",14,,0,0)
+Gui.F_Main.lblCalculate.BorderStyle(0)
+Gui.F_Main.lblCalculate.FontStyle(True,False,False,False,False)
+Gui.F_Main.lblEndDt.Create(Label,"End Date",True,74,19,0,138,29,True,0,"Tahoma",12,,0,0)
+Gui.F_Main.lblEndDt.BorderStyle(0)
+Gui.F_Main.lblEndDt.FontStyle(True,False,False,False,False)
+Gui.F_Main.dtpStrtDate.Create(DatePicker)
+Gui.F_Main.dtpStrtDate.Enabled(True)
+Gui.F_Main.dtpStrtDate.Visible(True)
+Gui.F_Main.dtpStrtDate.Zorder(0)
+Gui.F_Main.dtpStrtDate.Size(100,20)
+Gui.F_Main.dtpStrtDate.Position(4,51)
+Gui.F_Main.dtpStrtDate.CheckBox(False)
+Gui.F_Main.dtpStrtDate.FontName("Tahoma")
+Gui.F_Main.dtpStrtDate.FontSize(8.25)
+Gui.F_Main.dtpEndDt.Create(DatePicker)
+Gui.F_Main.dtpEndDt.Enabled(True)
+Gui.F_Main.dtpEndDt.Visible(True)
+Gui.F_Main.dtpEndDt.Zorder(0)
+Gui.F_Main.dtpEndDt.Size(100,20)
+Gui.F_Main.dtpEndDt.Position(138,51)
+Gui.F_Main.dtpEndDt.CheckBox(False)
+Gui.F_Main.dtpEndDt.FontName("Tahoma")
+Gui.F_Main.dtpEndDt.FontSize(8.25)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.Try
+Function.Intrinsic.UI.UsePixels ' Allows you to use Pixels instead of Twips throughout
+'TJS, August 2022
+'Customer:  Metal Zinc
+V.Local.sEmail.Declare
+V.Local.dStartDate.Declare
+
+F.Intrinsic.Date.DateAdd("d",-90,V.Ambient.Date,V.Local.dStartDate)
+
+Gui.F_Main.dtpStrtDate.Value(V.Local.dStartDate)
+
+F.Intrinsic.Control.CallSub(SetContextMenu)
+
+F.Global.Registry.ReadValue(6862,V.Caller.CompanyCode,"GCG_6862_PL_LEAD_TIME_MX",6862,1111,5,"",V.Local.sEmail)
+
+Gui.F_Main.txtEmailAdd.Text(V.Local.sEmail)
+
+F.Intrinsic.Control.CallSub(Refresh)
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.Control.CallSub(Error,"SubRoutine",V.Ambient.CurrentSubroutine,"eNumber",V.Ambient.ErrorNumber,"eDescription",V.Ambient.ErrorDescription)
+F.Intrinsic.Control.EndTry
+Program.Sub.Main.End
+
+Program.Sub.SetContextMenu.Start
+F.Intrinsic.Control.Try
+
+Gui.F_Main..ContextMenuCreate("ctxMain")
+Gui.F_Main..ContextMenuAddItem("ctxMain","ctExport",V.Enum.MenuItemType!Button,"Export and Email")
+Gui.F_Main..ContextMenuAddItem("ctxMain","ctRefresh",V.Enum.MenuItemType!Button,"Refresh")
+
+Gui.F_Main..ContextMenuSetItemEventHandler("ctxMain","ctExport","ExportAndEmail")
+Gui.F_Main..ContextMenuSetItemEventHandler("ctxMain","ctRefresh","Refresh")
+
+Gui.F_Main.GsGcPL_LeadTimes.ContextMenuAttach("ctxMain")
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.Control.CallSub(Error,"SubRoutine",V.Ambient.CurrentSubroutine,"eNumber",V.Ambient.ErrorNumber,"eDescription",V.Ambient.ErrorDescription)
+F.Intrinsic.Control.EndTry
+Program.Sub.SetContextMenu.End
+
+Program.Sub.Refresh.Start
+F.Intrinsic.Control.Try
+V.Local.sSQL.Declare
+V.Local.dStartDate.Declare
+V.Local.dEndDate.Declare
+
+V.Local.dStartDate.Set(V.Screen.F_Main!dtpStrtDate.Value)
+V.Local.dEndDate.Set(V.Screen.F_Main!dtpEndDt.Value)
+
+F.Intrinsic.Control.If(V.DataTable.dtPL_Lead.Exists)
+	F.Data.DataTable.Close("dtPL_Lead")
+F.Intrinsic.Control.EndIf
+
+F.ODBC.Connection!conts.OpenCompanyConnection
+	F.Data.DataTable.CreateFromSQL("dtPL_Lead","conts","Select A.PRODUCT_LINE, A.PRODUCT_LINE_DESC as PL_DESCRIPTION,B.EST_LEAD_TIME,0.00 as HIST_AVG,B.LEAD_TIME_NOTES from V_PRODUCT_LINE A left join GCG_6862_PL_LD_TIME B on A.PRODUCT_LINE = B.PRODUCT_LINE", True)
+	
+	F.Intrinsic.String.Build("Select PRODUCT_LINE, Avg(Datediff(Day,DATE_ORDER,DATE_INVOICE)) as HIST_AVG from V_ORDER_HIST_LINE where DATE_ORDER between '{0}' and '{1}' and PRODUCT_LINE != '' group by PRODUCT_LINE;",V.Local.dStartDate.PervasiveDate,V.Local.dEndDate.PervasiveDate,V.Local.sSQL)
+	F.Data.Dictionary.CreateFromSQL("dictAvgShip","conts",V.Local.sSQL)
+	F.Data.Dictionary.SetDefaultReturn("dictAvgShip",0.00)
+	
+	F.Data.DataTable.FillFromDictionary("dtPL_Lead","dictAvgShip","PRODUCT_LINE","HIST_AVG")
+	F.Data.Dictionary.Close("dictAvgShip")	
+F.ODBC.Connection!conts.Close
+
+F.Intrinsic.Control.CallSub(FormatGrid)
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.Control.CallSub(Error,"SubRoutine",V.Ambient.CurrentSubroutine,"eNumber",V.Ambient.ErrorNumber,"eDescription",V.Ambient.ErrorDescription)
+F.Intrinsic.Control.EndTry
+Program.Sub.Refresh.End
+
+Program.Sub.FormatGrid.Start
+F.Intrinsic.Control.Try
+
+Gui.F_Main.GsGcPL_LeadTimes.AddGridviewFromDatatable("gvPL_Lead","dtPL_Lead")
+
+Gui.F_Main.GsGcPL_LeadTimes.SetGridviewProperty("gvPL_Lead",V.Enum.GridViewPropertyNames!FindAlwaysVisible, True)
+
+'Header Font Bold
+F.Intrinsic.Control.CallSub(BulkFormatting,"Form","F_Main","GV","gvPL_Lead","GSGC","GsGcPL_LeadTimes","Cols",V.DataTable.dtPL_Lead.FieldNames,"Vals","True","Prop",V.Enum.ColumnPropertyNames!HeaderFontBold)
+
+'Header Back Color
+F.Intrinsic.Control.CallSub(BulkFormatting,"Form","F_Main","GV","gvPL_Lead","GSGC","GsGcPL_LeadTimes","Cols",V.DataTable.dtPL_Lead.FieldNames,"Vals",V.Color.GSS,"Prop",V.Enum.ColumnPropertyNames!HeaderBackColor)
+
+'Header Fore Color
+F.Intrinsic.Control.CallSub(BulkFormatting,"Form","F_Main","GV","gvPL_Lead","GSGC","GsGcPL_LeadTimes","Cols",V.DataTable.dtPL_Lead.FieldNames,"Vals","White","Prop",V.Enum.ColumnPropertyNames!HeaderForeColor)
+
+'Captions
+F.Intrinsic.Control.CallSub(BulkFormatting,"Form","F_Main","GV","gvPL_Lead","GSGC","GsGcPL_LeadTimes","Cols",V.DataTable.dtPL_Lead.FieldNames,"Vals","PL*!*Description*!*OA Est. Lead Time (Days)*!*Historic Avg. Lead Time (Days)*!*Lead Time Notes","Prop",V.Enum.ColumnPropertyNames!Caption)
+'Center align lead time columns
+F.Intrinsic.Control.CallSub(BulkFormatting,"Form","F_Main","GV","gvPL_Lead","GSGC","GsGcPL_LeadTimes","Cols","EST_LEAD_TIME*!*HIST_AVG","Vals","Center","Prop",V.Enum.ColumnPropertyNames!HeaderHAlignment)
+F.Intrinsic.Control.CallSub(BulkFormatting,"Form","F_Main","GV","gvPL_Lead","GSGC","GsGcPL_LeadTimes","Cols","EST_LEAD_TIME*!*HIST_AVG","Vals","Center","Prop",V.Enum.ColumnPropertyNames!CellHAlignment)
+'left align notes column
+F.Intrinsic.Control.CallSub(BulkFormatting,"Form","F_Main","GV","gvPL_Lead","GSGC","GsGcPL_LeadTimes","Cols","LEAD_TIME_NOTES","Vals","left","Prop",V.Enum.ColumnPropertyNames!HeaderHAlignment)
+F.Intrinsic.Control.CallSub(BulkFormatting,"Form","F_Main","GV","gvPL_Lead","GSGC","GsGcPL_LeadTimes","Cols","LEAD_TIME_NOTES","Vals","Left","Prop",V.Enum.ColumnPropertyNames!CellHAlignment)
+'Backcolor yellow for edittable fields
+F.Intrinsic.Control.CallSub(BulkFormatting,"Form","F_Main","GV","gvPL_Lead","GSGC","GsGcPL_LeadTimes","Cols","EST_LEAD_TIME*!*LEAD_TIME_NOTES","Vals","LightYellow","Prop",V.Enum.ColumnPropertyNames!CellBackColor)
+F.Intrinsic.Control.CallSub(BulkFormatting,"Form","F_Main","GV","gvPL_Lead","GSGC","GsGcPL_LeadTimes","Cols","EST_LEAD_TIME*!*LEAD_TIME_NOTES","Vals",V.Enum.ThemeColors!GssBlack,"Prop",V.Enum.ColumnPropertyNames!CellForeColor)
+
+'Miscellaneous
+Gui.F_Main.GsGcPL_LeadTimes.SetColumnProperty("gvPL_Lead","PRODUCT_LINE",V.Enum.ColumnPropertyNames!FixedWidth,20)
+
+Gui.F_Main.GsGcPL_LeadTimes.SetColumnProperty("gvPL_Lead","PRODUCT_LINE",V.Enum.ColumnPropertyNames!AllowEdit,False)
+Gui.F_Main.GsGcPL_LeadTimes.SetColumnProperty("gvPL_Lead","PRODUCT_LINE",V.Enum.ColumnPropertyNames!ReadOnly,True)
+
+Gui.F_Main.GsGcPL_LeadTimes.SetColumnProperty("gvPL_Lead","PL_DESCRIPTION",V.Enum.ColumnPropertyNames!AllowEdit,False)
+Gui.F_Main.GsGcPL_LeadTimes.SetColumnProperty("gvPL_Lead","PL_DESCRIPTION",V.Enum.ColumnPropertyNames!ReadOnly,True)
+
+Gui.F_Main.GsGcPL_LeadTimes.SetColumnProperty("gvPL_Lead","EST_LEAD_TIME",V.Enum.ColumnPropertyNames!AllowEdit,True)
+Gui.F_Main.GsGcPL_LeadTimes.SetColumnProperty("gvPL_Lead","EST_LEAD_TIME",V.Enum.ColumnPropertyNames!ReadOnly,False)
+
+Gui.F_Main.GsGcPL_LeadTimes.SetColumnProperty("gvPL_Lead","LEAD_TIME_NOTES",V.Enum.ColumnPropertyNames!AllowEdit,True)
+Gui.F_Main.GsGcPL_LeadTimes.SetColumnProperty("gvPL_Lead","LEAD_TIME_NOTES",V.Enum.ColumnPropertyNames!ReadOnly,False)
+
+Gui.F_Main.GsGcPL_LeadTimes.SetColumnProperty("gvPL_Lead","HIST_AVG",V.Enum.ColumnPropertyNames!AllowEdit,False)
+Gui.F_Main.GsGcPL_LeadTimes.SetColumnProperty("gvPL_Lead","HIST_AVG",V.Enum.ColumnPropertyNames!ReadOnly,True)
+
+Gui.F_Main.GsGcPL_LeadTimes.SetColumnProperty("gvPL_Lead","EST_LEAD_TIME",V.Enum.ColumnPropertyNames!DisplayCustomNumeric,"##,#0.0")
+Gui.F_Main.GsGcPL_LeadTimes.SetColumnProperty("gvPL_Lead","HIST_AVG",V.Enum.ColumnPropertyNames!DisplayCustomNumeric,"##,#0.0")
+
+Gui.F_Main.GsGcPL_LeadTimes.MainView("gvPL_Lead")
+
+F.Intrinsic.Control.If(V.Ambient.IsInTaskScheduler.Not)
+	Gui.F_Main..Show
+F.Intrinsic.Control.Else
+	F.Intrinsic.Control.CallSub(ExportAndEmail)
+F.Intrinsic.Control.EndIf
+
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.Control.CallSub(Error,"SubRoutine",V.Ambient.CurrentSubroutine,"eNumber",V.Ambient.ErrorNumber,"eDescription",V.Ambient.ErrorDescription)
+F.Intrinsic.Control.EndTry
+Program.Sub.FormatGrid.End
+
+Program.Sub.BulkFormatting.Start
+F.Intrinsic.Control.Try
+V.Local.sCol.Declare
+V.Local.sVal.Declare
+V.Local.iCnt.Declare
+V.Local.iVI.Declare
+
+F.Intrinsic.String.Split(V.Args.Cols,"*!*",V.Local.sCol)
+F.Intrinsic.String.Split(V.Args.Vals,"*!*",V.Local.sVal)
+
+V.Local.iVI.Set(-1)
+F.Intrinsic.Control.For(V.Local.iCnt,V.Local.sCol.UBound)
+	F.Intrinsic.Control.If(V.Local.sCol.UBound,=,V.Local.sVal.UBound)
+		Gui.[V.Args.FORM].[V.Args.GSGC].SetColumnProperty(V.Args.GV,V.Local.sCol(V.Local.iCnt),V.Args.Prop,V.Local.sVal(V.Local.iCnt))
+	F.Intrinsic.Control.ElseIf(V.Args.Prop,=,V.Enum.ColumnPropertyNames!VisibleIndex)
+		Gui.[V.Args.FORM].[V.Args.GSGC].SetColumnProperty(V.Args.GV,V.Local.sCol(V.Local.iCnt),V.Args.Prop,V.Local.iVI.++)
+	F.Intrinsic.Control.Else
+		Gui.[V.Args.FORM].[V.Args.GSGC].SetColumnProperty(V.Args.GV,V.Local.sCol(V.Local.iCnt),V.Args.Prop,V.Local.sVal)
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Next(V.Local.iCnt)
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.Control.CallSub(Error,"SubRoutine",V.Ambient.CurrentSubroutine,"eNumber",V.Ambient.ErrorNumber,"eDescription",V.Ambient.ErrorDescription)
+F.Intrinsic.Control.EndTry
+Program.Sub.BulkFormatting.End
+
+Program.Sub.cmdEmailSet_Click.Start
+F.Intrinsic.Control.Try
+V.Local.bAddCheck.Declare
+
+F.Global.Messaging.IsAddressValid(V.Screen.F_Main!txtEmailAdd.Text.Trim,V.Local.bAddCheck)
+
+F.Intrinsic.Control.If(V.Local.bAddCheck)
+	F.Global.Registry.AddValue(6862,V.Caller.CompanyCode,"GCG_6862_PL_LEAD_TIME_MX",6862,1111,False,V.Screen.F_Main!txtEmailAdd.Text.Trim,False,0,-999.0,1/1/1980,12:00:00 AM)
+F.Intrinsic.Control.Else
+	F.Intrinsic.UI.Msgbox("Please input a correctly formatted email address", "Invalid Email Address")
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.Control.CallSub(Error,"SubRoutine",V.Ambient.CurrentSubroutine,"eNumber",V.Ambient.ErrorNumber,"eDescription",V.Ambient.ErrorDescription)
+F.Intrinsic.Control.EndTry
+Program.Sub.cmdEmailSet_Click.End
+
+Program.Sub.ExportAndEmail.Start
+F.Intrinsic.Control.Try
+V.Local.sForm.Declare(String, "F_Main")
+V.Local.sControl.Declare(String, "GsGcPL_LeadTimes")
+V.Local.sFileExport.Declare
+V.Local.sMsg.Declare
+V.Local.sDate.Declare
+V.Local.sTime.Declare
+V.Local.bCheckPresence.Declare
+V.Local.bFileLocked.Declare
+V.Local.sSender.Declare
+V.Local.iUser.Declare
+V.Local.sSubject.Declare
+V.Local.sBody.Declare
+V.Local.sRecipient.Declare
+V.Local.sAttachments.Declare
+V.Local.sRet.Declare
+V.Local.iCnt.Declare
+V.Local.iRet.Declare
+
+V.Local.sRecipient.Set(V.Screen.F_Main!txtEmailAdd.Text.Trim)
+
+F.Intrinsic.String.DateString(V.Ambient.Date,V.Local.sDate)
+F.Intrinsic.String.TimeString(V.Ambient.Time,V.Local.sTime)
+
+F.Automation.MSExcel.CheckPresence(V.Local.bCheckPresence)
+
+F.Intrinsic.Control.If(V.Local.bCheckPresence)
+	F.Intrinsic.String.Build("{0}GCG_6862_PL_LeadTimes_{1}_{2}.xlsx",V.Caller.LocalGSSTempDir,V.Local.sDate,V.Local.sTime,V.Local.sFileExport)
+	F.Intrinsic.File.IsFileLocked(V.Local.sFileExport,V.Local.bFileLocked)
+	F.Intrinsic.Control.If(V.Local.bFileLocked)
+		F.Intrinsic.String.Build("File is already open. Please close and export again.{0}File : {1}",V.Ambient.NewLine,V.Local.sFileExport,V.Local.sMsg)
+		F.Intrinsic.UI.Msgbox(V.Local.sMsg,"File In Use")
+	F.Intrinsic.Control.Else
+		Gui.[V.Local.sForm].[V.Local.sControl].Export(V.Local.sFileExport,"xlsx")
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.Else
+	F.Intrinsic.String.Build("{0}GCG_6862_PL_LeadTimes_{1}_{2}.csv",V.Caller.LocalGssTempDir,V.Local.sDate,V.Local.sTime,V.Local.sFileExport)
+	F.Intrinsic.File.IsFileLocked(V.Local.sFileExport,V.Local.bFileLocked)
+	F.Intrinsic.Control.If(V.Local.bFileLocked)
+		F.Intrinsic.String.Build("File is already open. Please close and export again.{0}File: {1}",V.Ambient.NewLine,V.Local.sFileExport,V.Local.sMsg)
+		F.Intrinsic.UI.Msgbox(V.Local.sMsg,"File In Use")
+	F.Intrinsic.Control.Else
+		Gui.[V.Local.sForm].[V.Local.sControl].Export(V.Local.sFileExport,"csv")
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.If(V.Local.sRecipient.Trim,<>,"")
+		'F.Global.Security.GetUserEmail(V.Caller.User,V.Local.sSender)
+		V.Local.sSender.Set("customercare@metalzincmfg.com")
+		
+		F.Global.Security.GetUserId(V.Caller.User,V.Caller.CompanyCode,V.Local.iUser)
+		
+		F.Intrinsic.String.Build("PL Lead Times with Historical Avgerage from {0} to {1}",V.Screen.F_Main!dtpStrtDate.Value,V.Screen.F_Main!dtpEndDt.Value,V.Local.sSubject)
+		F.Intrinsic.String.Build("All,{0}Attached is the latest product line lead times with averages calculated from {1} to {2}",V.Ambient.NewLine,V.Screen.F_Main!dtpStrtDate.Value,V.Screen.F_Main!dtpEndDt.Value,V.Local.sBody)
+		
+		V.Local.sAttachments.Set(V.Local.sFileExport)
+		
+		F.Intrinsic.Control.For(V.Local.iCnt,V.Local.sAttachments.UBound)
+			F.Intrinsic.String.Split(V.Local.sAttachments(V.Local.iCnt),"\",V.Local.sRet)
+			V.Local.sAttachments(V.Local.iCnt).Set(V.Local.sRet(V.Local.sRet.UBound))
+			V.Local.sRet(V.Local.sRet.UBound).Set("")
+			F.Intrinsic.String.Join(V.Local.sRet,"\",V.Local.sRet)
+			V.Local.sRet.RedimPreserve(0,0)
+			F.Intrinsic.String.Build("{0}*!*{1}",V.Local.sAttachments(V.Local.iCnt),V.Local.sRet,V.Local.sAttachments(V.Local.iCnt))
+		F.Intrinsic.Control.Next(V.Local.iCnt)
+		
+		F.Global.Messaging.QueueMessage(V.Caller.CompanyCode,V.Local.iUser,"PL Lead Times",V.local.sSubject,V.Local.sSender,V.Local.sRecipient,V.Local.sBody,-1,"",False,"","","","","","","",V.Local.sAttachments,False,"")
+		
+		F.Intrinsic.String.Build("PL Lead Times exported and emailed.{0}Do you wish to open the exported file now?",V.Ambient.NewLine,V.Local.sMsg)
+		
+		F.Intrinsic.Control.If(V.Ambient.IsInTaskScheduler.Not)
+			
+			F.Intrinsic.UI.Msgbox(V.Local.sMsg,"Success!",4,V.Local.iRet)		
+		
+			F.Intrinsic.Control.If(V.Local.iRet,=,6)
+				F.Intrinsic.Task.ShellExec(0,"",V.Local.sFileExport,"","",1)
+			F.Intrinsic.Control.EndIf
+		F.Intrinsic.Control.Else
+			F.Intrinsic.Control.End
+		F.Intrinsic.Control.EndIf
+		
+F.Intrinsic.Control.ElseIf(V.Ambient.IsInTaskScheduler.Not)
+	F.Intrinsic.Task.ShellExec(0,"",V.Local.sFileExport,"","",1)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.Control.CallSub(Error,"SubRoutine",V.Ambient.CurrentSubroutine,"eNumber",V.Ambient.ErrorNumber,"eDescription",V.Ambient.ErrorDescription)
+F.Intrinsic.Control.EndTry
+Program.Sub.ExportAndEmail.End
+
+Program.Sub.GsGcPL_LeadTimes_CellValueChanged.Start
+F.Intrinsic.Control.Try
+V.Local.sPL.Declare
+V.Local.sPLDesc.Declare
+V.Local.sEstLead.Declare
+V.Local.sLeadNotes.Declare
+V.Local.sSQL.Declare
+
+Gui.F_Main.GsGcPL_LeadTimes.GetCellValueByColumnName("gvPL_Lead","PRODUCT_LINE",V.Args.RowIndex,V.Local.sPL)
+Gui.F_Main.GsGcPL_LeadTimes.GetCellValueByColumnName("gvPL_Lead","PL_DESCRIPTION",V.Args.RowIndex,V.Local.sPLDesc)
+Gui.F_Main.GsGcPL_LeadTimes.GetCellValueByColumnName("gvPL_Lead","EST_LEAD_TIME",V.Args.RowIndex,V.Local.sEstLead)
+Gui.F_Main.GsGcPL_LeadTimes.GetCellValueByColumnName("gvPL_Lead","LEAD_TIME_NOTES",V.Args.RowIndex,V.Local.sLeadNotes)
+
+F.Intrinsic.String.Build("Select * from GCG_6862_PL_LD_TIME where PRODUCT_LINE = '{0}'",V.Local.sPL.Trim,V.Local.sSQL)
+
+F.ODBC.Connection!conts.OpenCompanyConnection
+	F.ODBC.Connection!conts.ExecuteAndReturn(V.Local.sSQL,V.Local.sSQL)
+	
+	F.Intrinsic.Control.If(V.Ambient.ExecuteAndReturnEOF)
+		F.Intrinsic.String.Build("Insert into GCG_6862_PL_LD_TIME (PRODUCT_LINE,PL_DESCRIPTION,EST_LEAD_TIME,LEAD_TIME_NOTES) values('{0}','{1}','{2}','{3}')",V.Local.sPL,V.Local.sPLDesc,V.Local.sEstLead,V.Local.sLeadNotes,V.Local.sSQL)
+	F.Intrinsic.Control.Else
+		F.Intrinsic.String.Build("Update GCG_6862_PL_LD_TIME set EST_LEAD_TIME = '{1}',LEAD_TIME_NOTES = '{2}' where PRODUCT_LINE = '{0}'",V.Local.sPL,V.Local.sEstLead,V.Local.sLeadNotes,V.Local.sSQL)
+	F.Intrinsic.Control.EndIf
+	
+	F.ODBC.Connection!conts.Execute(V.Local.sSQL)
+	
+F.ODBC.Connection!conts.Close
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.Control.CallSub(Error,"SubRoutine",V.Ambient.CurrentSubroutine,"eNumber",V.Ambient.ErrorNumber,"eDescription",V.Ambient.ErrorDescription)
+F.Intrinsic.Control.EndTry
+Program.Sub.GsGcPL_LeadTimes_CellValueChanged.End
+
+Program.Sub.F_Main_UnLoad.Start
+F.Intrinsic.Control.End
+Program.Sub.F_Main_UnLoad.End
+
+Program.Sub.Error.Start
+V.Local.sError.Declare
+V.Local.iRet.Declare
+V.Local.sSep.Declare
+
+F.Intrinsic.String.Build("-------------------------------------------------------------------------------------",,V.Local.sSep)
+F.Intrinsic.String.Build("({5}-{6}){0}{7}{0}Project: {4}{0}{7}{0}Sub: {1}{0}Error: {2}, {3}", V.Ambient.NewLine, V.Args.SubRoutine, V.Args.eNumber, V.Args.eDescription,V.Caller.ScriptFile,V.Ambient.Date, V.Ambient.Time,V.Local.sSep,V.Local.sError)
+F.Intrinsic.UI.Msgbox(V.Local.sError,"Error",V.Local.iRet)
+Program.Sub.Error.End
+
+Program.Sub.Comments.Start
+${$5$}$20.1.8405.30089$}$1
+${$6$}$tsmith$}$20230124153639533$}$xqPbj9atw05FglvzeFsZ9cqXP+qvG6tXNW6dJ8h0ROqcriTD6oTVS4j9O2b47geZSbhru5A7U5A=
+Program.Sub.Comments.End
