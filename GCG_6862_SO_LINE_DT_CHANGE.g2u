@@ -1,0 +1,90 @@
+﻿Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.Try
+Function.Intrinsic.UI.UsePixels ' Allows you to use Pixels instead of Twips throughout
+'TJS, January 2023
+'Customer: Metal Zinc
+'This project will automatically adjust the Customer Due Date on a SO Line based on lead times established for products lines.
+'Completed as a part of a Development as a Service project.
+
+'Hook 12045 - part change hook	
+'Must deliver by date = 000132
+'Item promise date = 000011
+'Product line = 000013
+'Hook 12230 - Line Save hook
+'Hook 11560 - Order Header Populate
+
+V.Local.sDateYear.Declare
+V.Local.sDateMonth.Declare
+V.Local.sDateDay.Declare
+V.Local.sDeliverBy.Declare
+V.Local.sPromDate.Declare
+V.Local.sSQL.Declare
+V.Local.fLeadTime.Declare
+V.Local.iDateDif.Declare
+V.Local.sMsg.Declare
+
+F.Intrinsic.Control.SelectCase(V.Caller.Hook)
+	F.Intrinsic.Control.Case(11560)
+		F.Intrinsic.Control.If(V.Caller.Switches,=,"N")
+			V.Passed.000094.Set("DFault")
+		F.Intrinsic.Control.EndIf
+		F.Intrinsic.Control.End
+	F.Intrinsic.Control.Case(12045)
+		F.Intrinsic.String.Left(V.Passed.000132,4,V.Local.sDateYear)
+		F.Intrinsic.String.Mid(V.Passed.000132,5,2,V.Local.sDateMonth)
+		F.Intrinsic.String.Right(V.Passed.000132,2,V.Local.sDateDay)
+		
+		F.Intrinsic.String.Build("{0}/{1}/{2}",V.Local.sDateMonth,V.Local.sDateDay,V.Local.sDateYear,V.Local.sDeliverBy)
+		
+		F.Intrinsic.String.Build("Select EST_LEAD_TIME from GCG_6862_PL_LD_TIME where PRODUCT_LINE = '{0}'",V.Passed.000013,V.Local.sSQL)
+		
+		F.ODBC.Connection!conts.OpenCompanyConnection
+			F.ODBC.Connection!conts.ExecuteAndReturn(V.Local.sSQL,V.Local.fLeadTime)
+		F.ODBC.Connection!conts.Close
+		
+		F.Intrinsic.Control.If(V.Ambient.ExecuteAndReturnEOF.Not)
+			F.Intrinsic.Date.DateAdd("d",V.Local.fLeadTime,V.Local.sDeliverBy,V.Local.sDeliverBy)
+		
+			F.Intrinsic.String.Format(V.Local.sDeliverBy,"YYYYMMDD",V.Passed.000132)
+		F.Intrinsic.Control.EndIf
+		
+	F.Intrinsic.Control.Case(12230)
+		F.Intrinsic.String.Left(V.Passed.000011,4,V.Local.sDateYear)
+		F.Intrinsic.String.Mid(V.Passed.000011,5,2,V.Local.sDateMonth)
+		F.Intrinsic.String.Right(V.Passed.000011,2,V.Local.sDateDay)
+		
+		F.Intrinsic.String.Build("{0}/{1}/{2}",V.Local.sDateMonth,V.Local.sDateDay,V.Local.sDateYear,V.Local.sPromDate)
+		
+		F.Intrinsic.Date.DateDiff("d",V.Ambient.Date,V.Local.sPromDate,V.Local.iDateDif)
+		
+		F.Intrinsic.Control.If(V.Local.iDateDif,<,0)
+			F.Intrinsic.String.Format(V.Ambient.Date,"YYYYMMDD",V.Passed.000011)
+			F.Intrinsic.String.Build("Resulting Ship By date in the past.{0}Adjusted to today's date instead.",V.Ambient.NewLine,V.Local.sMsg)
+			F.Intrinsic.UI.Msgbox(V.Local.sMsg,"Warning!")
+		F.Intrinsic.Control.EndIf
+	
+F.Intrinsic.Control.EndSelect
+
+
+F.Intrinsic.Control.Catch
+	F.Intrinsic.Control.CallSub(Error,"SubRoutine",V.Ambient.CurrentSubroutine,"eNumber",V.Ambient.ErrorNumber,"eDescription",V.Ambient.ErrorDescription)
+F.Intrinsic.Control.EndTry
+Program.Sub.Main.End
+
+Program.Sub.Error.Start
+V.Local.sError.Declare
+V.Local.iRet.Declare
+V.Local.sSep.Declare
+
+F.Intrinsic.String.Build("-------------------------------------------------------------------------------------",,V.Local.sSep)
+F.Intrinsic.String.Build("({5}-{6}){0}{7}{0}Project: {4}{0}{7}{0}Sub: {1}{0}Error: {2}, {3}", V.Ambient.NewLine, V.Args.SubRoutine, V.Args.eNumber, V.Args.eDescription,V.Caller.ScriptFile,V.Ambient.Date, V.Ambient.Time,V.Local.sSep,V.Local.sError)
+F.Intrinsic.UI.Msgbox(V.Local.sError,"Error",V.Local.iRet)
+Program.Sub.Error.End
+
+Program.Sub.Comments.Start
+${$5$}$20.1.8413.19752$}$1
+${$6$}$tsmith$}$20230125155621556$}$xqPbj9atw05FglvzeFsZ9cqXP+qvG6tXNW6dJ8h0ROp7OlAA+MjZ9LBSJfRjPjndlJm642vJTpI=
+Program.Sub.Comments.End
